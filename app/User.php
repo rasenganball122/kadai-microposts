@@ -36,4 +36,18 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+    
+     /**
+     * このユーザが所有する投稿（ Micropostモデルとの関係を定義）。このユーザ（のインスタンス）の投稿の履歴のまとまりを指す。使う使わないにかかわらず，必ず書かないといけない。
+     */
+    public function microposts(){
+        return $this->hasMany(Micropost::class);//このMicropostは，対応する相手の形式を書いている。このreturnでは，このユーザの投稿履歴，インスタンスがまとまった，EloquentCollectionのようなものと，sql文が入ったインスタンスが返される。
+    }
+    
+     /**
+     * このユーザに関係するモデルの件数をロードする。
+     */
+     public function loadRelationshipCounts(){
+         $this->loadCount("microposts");
+     }
 }
