@@ -20,9 +20,14 @@ Route::get("login", "Auth\LoginController@showLoginform")->name("login");
 Route::post("login", "Auth\LoginController@login")->name("login.post");
 Route::get("logout", "Auth\LoginController@logout")->name("logout.get");
 
-Route::group(["middleware"=>["auth"]], function(){
+
+Route::group(["middleware"=>["auth"]], function(){//["middleware"=>["auth"]により，このgroup内のメソッドでauthの認証機能を適用できる。
+    Route::group(["prefix"=>"users/{id}"], function(){
+        Route::post("follow", "UserFollowController@store")->name("user.follow");//user_followにフォロー関係，つまりレコードを追加する。
+        Route::delete("unfollow", "UserFollowController@destroy")->name("user.unfollow");//user_followからフォロー関係，つまりレコードを追加する。
+        Route::get("followings", "UsersController@followings")->name("users.followings");
+        Route::get("followers", "UsersController@followers")->name("users.followers");
+    });
     Route::resource("users", "UsersController", ["only"=>["index", "show"]]);
     Route::resource("microposts", "MicropostsController", ["only"=>["store", "destroy"]]);
 });
-
-//2022/10/29にchapter9.4まで終わった。
