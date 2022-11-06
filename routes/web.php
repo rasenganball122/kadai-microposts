@@ -11,7 +11,7 @@
 |
 */
 
-Route::get("/", "MicropostsController@index");
+Route::get("/", "MicropostsController@index")->name("top.get");
 
 Route::get("signup", "Auth\RegisterController@showRegistrationForm")->name("signup.get");
 Route::post("signup", "Auth\RegisterController@register")->name("signup.post");
