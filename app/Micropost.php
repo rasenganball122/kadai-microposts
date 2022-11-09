@@ -14,4 +14,12 @@ class Micropost extends Model
     public function user(){
         return $this->belongsTo(User::class);//このUserは，対応する相手の形式を書いている。このreturnでは，この投稿のインズタンスと，sql文が入ったインスタンスが返される。
     }
+    
+     /**
+     * このMicropostをお気に入り登録しているユーザを指す（ Userモデルとの関係を定義）。
+     *   favoritesテーブルのuser_idはお気に入り登録しているユーザのid, micropost_idはお気に入り登録されているmicropostのidを指す。
+     */
+    public function favorite_users() {
+        return $this->belongsToMany(User::class, "favorites", "micropost_id", "user_id")->withTimestamps();//このMicropostのidをmicropost_idに入れた時の，favoritesのレコードでの相手のuser_idの集まりを指す。     
+    }
 }

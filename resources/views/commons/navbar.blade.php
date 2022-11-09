@@ -18,6 +18,8 @@
                             <ul class="dropdown-menu dropdown-menu-right">
                                 {{--ユーザー詳細ページへのリンク--}}
                                 <li class="dropdown-item">{!! link_to_route("users.show", "My profile", ["user"=> Auth::id()]) !!}</li>
+                                {{--このユーザーのお気に入りの投稿の一案詳細ページへのリンク--}}
+                                <li class="dropdown-item">{!! link_to_route("users.favorites", "Favorites", ["id"=>Auth::id()]) !!}</li>
                                 <li class="dropdown-divider"></li>
                                 {{--ログアウトへのリンク--}}
                                 <li class="dropdown-item">{!! link_to_route("logout.get", "Logout") !!}</li>

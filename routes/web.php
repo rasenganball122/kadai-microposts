@@ -27,7 +27,15 @@ Route::group(["middleware"=>["auth"]], function(){//["middleware"=>["auth"]に�
         Route::delete("unfollow", "UserFollowController@destroy")->name("user.unfollow");//user_followからフォロー関係，つまりレコードを追加する。
         Route::get("followings", "UsersController@followings")->name("users.followings");
         Route::get("followers", "UsersController@followers")->name("users.followers");
+        Route::get("favorites", "UsersController@favorites")->name("users.favorites");
     });
+    
     Route::resource("users", "UsersController", ["only"=>["index", "show"]]);
+    
+    Route::group(["prefix"=>"microposts/{id}"], function(){
+        Route::post("favor", "FavoritesController@store")->name("favorites.favor");
+        Route::delete("unfavor", "FavoritesController@destroy")->name("favorites.unfavor");
+    });
     Route::resource("microposts", "MicropostsController", ["only"=>["store", "destroy"]]);
 });
+

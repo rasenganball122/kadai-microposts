@@ -21,6 +21,8 @@
                             {!! Form::submit("Delete", ["class"=>"btn btn-danger btn-sm"]) !!}
                         {!! Form::close() !!}
                     @endif
+                    {{--お気に入り登録ボタン，お気に入り登録解除ボタンのフォーム--}}
+                    @include("microposts.favor_button")
                 </div>
             </div>
         </li>

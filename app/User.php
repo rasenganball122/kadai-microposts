@@ -107,8 +107,7 @@ class User extends Authenticatable
         }
     }
      
-     
-     /**
+      /**
      * 指定された $userIdのユーザをこのユーザがフォロー中であるか調べる。フォロー中ならtrueを返す。
      *
      * @param  int  $userId
@@ -134,10 +133,71 @@ class User extends Authenticatable
     }
     
     
+    
      /**
-     * このユーザに関係するモデル(microposts,followers, followings)の件数をロードする。
+     * このユーザがお気に入り登録しているMicropostを指す（ Micropostモデルとの関係を定義）。
+     *  favoritesテーブルのuser_idはお気に入り登録しているユーザのid, micropost_idはお気に入り登録されているmicropostのidを指す。
+     */
+    public function favorites() {
+        return $this->belongsToMany(Micropost::class, "favorites", "user_id", "micropost_id")->withTimestamps();//このユーザのidをuser_idに入れた時の，favoritesのレコードでの相手のmicropost_idの集まりを指す。     
+    }
+    
+     /**
+     * $micropostIdで指定されたユーザをフォローする。
+     *
+     * @param  int  $micropostId
+     * @return bool
+     */
+    public function favor($micropostId){
+        // すでにお気に入り登録しているか
+        $exist=$this->is_favoring($micropostId);
+        
+        if($exist){
+             // お気に入り登録済みの場合は何もしない
+            return false;
+        }else{
+            // 上記以外はお気に入り登録する
+            $this->favorites()->attach($micropostId);
+            return true;
+        }
+    }
+    
+    /**
+     * $userIdで指定されたユーザをアンフォローする。
+     *
+     * @param  int  $userId
+     * @return bool
+     */
+    public function unfavor($micropostId){
+        // すでにお気に入り登録しているか
+        $exist=$this->is_favoring($micropostId);
+        if($exist){
+            // 上記以外はお気に入り登録を外す
+            $this->favorites()->detach($micropostId);
+            return true;    
+        }else{
+            //上記以外の場合は何もしない
+            return false;
+        }
+    }
+    
+    /**
+     * 指定された $micropostIdのMicropostをこのユーザがお気に入り登録中であるか調べる。お気に入り登録中ならtrueを返す。
+     *
+     * @param  int  $micropostId
+     * @return bool
+     */
+    public function is_favoring($micropostId){
+        // お気に入り登録中のMicropostの中に $micpostIdのものが存在するか
+        return $this->favorites()->where("micropost_id", $micropostId)->exists();
+    }
+    
+    
+    
+     /**
+     * このユーザに関係するモデル(microposts,followers, followings, favorites)の件数をロードする。
      */
      public function loadRelationshipCounts(){
-         $this->loadCount(["microposts", "followers", "followings"]);
+         $this->loadCount(["microposts", "followers", "followings", "favorites"]);
      }
 }
